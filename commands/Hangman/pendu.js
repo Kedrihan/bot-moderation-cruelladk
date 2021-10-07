@@ -28,7 +28,7 @@ module.exports = {
         })
       }
       else {
-        if (args[0] == "stop" && (message.member.roles.cache.some(role => role.name === 'mod') || message.member.roles.cache.some(role => role.name === 'admin'))) {
+        if (args[0] == "stop" && message.author.username == "Kedrihan") {
           client.hangman.isLaunched = false;
           return message.channel.send(new MessageEmbed()
             .setColor(ee.wrongcolor)
