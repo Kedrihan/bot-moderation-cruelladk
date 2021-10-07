@@ -5,7 +5,7 @@ module.exports = {
   name: "devine",
   category: "Hangman",
   aliases: [],
-  allowedChannels: ["552475150826602506"],
+  allowedChannels: ["890510002714996737"],
   usage: "devine <LETTRE>, devine <MOT>",
   description: "Tentative pour deviner une lettre ou un mot au pendu",
   run: async (client, message, args, user, text, prefix) => {

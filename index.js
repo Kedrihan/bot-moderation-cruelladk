@@ -36,5 +36,5 @@ client.hangman = {
   require(`./handlers/${handler}`)(client);
 });
 //login into the bot
-client.login(process.env.CRUCRUBOT_TOKEN);
+client.login(process.env.G6_TOKEN);
 

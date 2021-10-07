@@ -6,7 +6,7 @@ module.exports = {
   name: "pendu",
   category: "Hangman",
   aliases: [],
-  allowedChannels: ["552475150826602506"],
+  allowedChannels: ["890510002714996737"],
   usage: "pendu",
   description: "Lance une partie de pendu",
   run: async (client, message, args, user, text, prefix) => {
