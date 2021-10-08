@@ -33,7 +33,7 @@ module.exports = {
           },
           function (err, res, body) {
             if (err) console.log(err);
-            if (body.users[0] === undefined) {
+            if (body.data[0] === undefined) {
               return message.channel.send(new MessageEmbed()
                 .setColor(ee.wrongcolor)
                 .setFooter(ee.footertext, ee.footericon)
@@ -45,7 +45,7 @@ module.exports = {
                 .setColor(ee.color)
                 .setFooter(ee.footertext, ee.footericon)
                 .setTitle(`:white_check_mark: Utilisateur trouvé`)
-                .setDescription("Le compte `" + args[0] + "` a été créé le "+new Date(body.users[0].created_at.split("T")[0]).toLocaleDateString('fr-FR'))
+                .setDescription("Le compte `" + args[0] + "` a été créé le "+new Date(body.data[0].created_at.split("T")[0]).toLocaleDateString('fr-FR'))
               );
             }
           }
