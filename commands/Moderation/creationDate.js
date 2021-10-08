@@ -33,7 +33,7 @@ module.exports = {
           },
           function (err, res, body) {
             if (err) console.log(err);
-            if (body.data[0] === undefined) {
+            if (body.users[0] === undefined) {
               return message.channel.send(new MessageEmbed()
                 .setColor(ee.wrongcolor)
                 .setFooter(ee.footertext, ee.footericon)
