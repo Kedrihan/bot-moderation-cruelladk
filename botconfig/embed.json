@@ -1,7 +1,6 @@
 {
   "color": "#8BD600",
   "wrongcolor": "#e01e01",
-  "wincolor": "#23c235",
-  "footertext": "G6 Bot",
-  "footericon": "https://cdn.discordapp.com/app-icons/890506133628915742/c9589b3afd85ae77ab1c79921bf0b960.png"
+  "footertext": "Moderation Bot Logs",
+  "footericon": "https://cdn.discordapp.com/app-icons/566160523452874753/ba33bc5f83932e428205519ffa9d7014.png"
 }

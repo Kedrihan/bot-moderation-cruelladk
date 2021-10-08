@@ -1,15 +1,17 @@
 {
   "name": "discord-bot-cruella",
   "version": "1.0.0",
-  "description": "Discord bot for Cruelladk",
+  "description": "Discord&Twitch moderation bot for Cruelladk",
   "main": "index.js",
   "author": "Kedrihan",
   "license": "ISC",
   "dependencies": {
     "ascii-table": "0.0.9",
+    "axios": "^0.22.0",
     "colors": "^1.4.0",
     "discord.js": "^12.5.0",
-    "random-word-fr": "^1.0.3"
+    "tmi.js": "^1.4.2",
+    "twitch-moderation-pubsub": "^0.1.9"
   },
   "devDependencies": {
     "ascii-table": "0.0.9"

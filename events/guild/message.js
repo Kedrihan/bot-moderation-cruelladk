@@ -5,9 +5,9 @@
 const config = require("../../botconfig/config.json"); //loading config file with token and prefix, and settings
 const ee = require("../../botconfig/embed.json"); //Loading all embed settings like color footertext and icon ...
 const Discord = require("discord.js"); //this is the official discord.js wrapper for the Discord Api, which we use!
-const { escapeRegex, createBar } = require("../../handlers/functions"); //Loading all needed functions
+const { escapeRegex } = require("../../handlers/functions"); //Loading all needed functions
 //here the event starts
-module.exports = async (client, message) => {
+module.exports = async (client, twitch, pubsub, message) => {
   try {
     //if the message is not in a guild (aka in dms), return aka ignore the inputs
     if (!message.guild) return;
@@ -17,17 +17,6 @@ module.exports = async (client, message) => {
     if (message.channel.partial) await message.channel.fetch();
     //if the message is on partial fetch it
     if (message.partial) await message.fetch();
-
-    //tag du bot
-    if (message.content.includes(client.user.id)) {
-      return message.channel.send(new MessageEmbed()
-        .setColor(ee.wrongcolor)
-        .setFooter(ee.footertext, ee.footericon)
-        .setTitle(`❌ ERREUR`)
-        .setDescription("Arrête de me tag stp !")
-      );
-    }
-
 
     //get the current prefix from the botconfig/config.json
     let prefix = config.prefix
@@ -43,6 +32,10 @@ module.exports = async (client, message) => {
     const cmd = args.shift().toLowerCase();
     //if no cmd added return error
     if (cmd.length === 0) {
+      return;
+    }
+    //if not in admin channel return error
+    if (!["629284733653745664", "629283451832631296", "895396809252425769"].includes(message.channel.id)) {
       return;
     }
     //get the command from the collection
@@ -71,38 +64,7 @@ module.exports = async (client, message) => {
       timestamps.set(message.author.id, now); //if he is not on cooldown, set it to the cooldown
       setTimeout(() => timestamps.delete(message.author.id), cooldownAmount); //set a timeout function with the cooldown, so it gets deleted later on again
       try {
-        //try to delete the message of the user who ran the cmd
-        /*try{  message.delete();   }catch{}
-        //if Command has specific permission return error
-        if(command.memberpermissions && !message.member.hasPermission(command.memberpermissions, { checkAdmin: command.adminPermOverride, checkOwner: command.adminPermOverride })) {
-          return message.channel.send(new Discord.MessageEmbed()
-            .setColor(ee.wrongcolor)
-            .setFooter(ee.footertext, ee.footericon)
-            .setTitle("❌ Error | You are not allowed to run this command!")
-            .setDescription(`You need these Permissions: \`${command.memberpermissions.join("`, ``")}\``)
-          ).then(msg=>msg.delete({timeout: 5000}).catch(e=>console.log("Couldn't Delete --> Ignore".gray)));
-        }
-        //if the Bot has not enough permissions return error
-        let required_perms = ["ADD_REACTIONS","PRIORITY_SPEAKER","VIEW_CHANNEL","SEND_MESSAGES",
-        "EMBED_LINKS","CONNECT","SPEAK","DEAFEN_MEMBERS"]
-        if(!message.guild.me.hasPermission(required_perms)){
-          try{ message.react("❌"); }catch{}
-          return message.channel.send(new Discord.MessageEmbed()
-            .setColor(ee.wrongcolor)
-            .setFooter(ee.footertext, ee.footericon)
-            .setTitle("❌ Error | I don't have enough Permissions!")
-            .setDescription("Please give me just `ADMINISTRATOR`, because I need it to delete Messages, Create Channel and execute all Admin Commands.\n If you don't want to give me them, then those are the exact Permissions which I need: \n> `" + required_perms.join("`, `") +"`")
-          )
-        }*/
-        //run the command with the parameters:  client, message, args, user, text, prefix,
-        if (!command.allowedChannels.includes("all") && !command.allowedChannels.includes(message.channel.id)) {
-          return message.channel.send(new Discord.MessageEmbed()
-            .setColor(ee.wrongcolor)
-            .setFooter(ee.footertext, ee.footericon)
-            .setTitle(`❌ ERREUR | Vous ne pouvez pas utiliser cette commande dans ce canal.`)
-          ).then(msg => msg.delete({ timeout: 8000 }).catch(e => console.log("Couldn't Delete --> Ignore".gray)));
-        }
-        command.run(client, message, args, message.member, args.join(" "), prefix);
+        command.run(client, twitch, pubsub, message, args, message.member, args.join(" "), prefix);
       } catch (e) {
         console.log(String(e.stack).red)
         return message.channel.send(new Discord.MessageEmbed()
@@ -123,7 +85,7 @@ module.exports = async (client, message) => {
   } catch (e) {
     return message.channel.send(
       new MessageEmbed()
-        .setColor("RED")
+        .setColor(ee.wrongcolor)
         .setTitle(`❌ ERREUR | Une erreur est survenue.`)
         .setDescription(`\`\`\`${e.stack}\`\`\``)
     );

@@ -1,7 +1,5 @@
-const randomWordFR = require('random-word-fr');
-const { MessageEmbed } = require("discord.js");
-const config = require("../botconfig/config.json");
-const ee = require("../botconfig/embed.json");
+
+const axios = require("axios"); //this package is for reading files and getting their inputs
 module.exports = {
   //get a member lol
   getMember: function (message, toFind = "") {
@@ -112,103 +110,8 @@ module.exports = {
       console.log(String(e.stack).bgRed)
     }
   },
-  displayHangman: function (failures) {
-    let hang = ""
-    switch (failures) {
-      case 0:
-        hang = "``` \n      \n \n \n \n```";
-        break;
-      case 1:
-        hang = "``` \n      \n \n \n \n━┻━```";
-        break;
-      case 2:
-        hang = "``` \n ┃     \n ┃\n ┃\n ┃\n━┻━```";
-        break;
-      case 3:
-        hang = "``` ┏━━━━━┯\n ┃     \n ┃\n ┃\n ┃\n━┻━```";
-        break;
-      case 4:
-        hang = "``` ┏━━━━━┯\n ┃     │\n ┃\n ┃\n ┃\n━┻━```";
-        break;
-      case 5:
-        hang = "``` ┏━━━━━┯\n ┃     │\n ┃     O\n ┃\n ┃\n━┻━```"
-        break;
-      case 6:
-        hang = "``` ┏━━━━━┯\n ┃     │\n ┃     O\n ┃     X\n ┃\n━┻━```";
-        break;
-      case 7:
-        hang = "``` ┏━━━━━┯\n ┃     │\n ┃    \\O\n ┃     X\n ┃\n━┻━```";
-        break;
-      case 8:
-        hang = "``` ┏━━━━━┯\n ┃     │\n ┃    \\O/\n ┃     X\n ┃\n━┻━```";
-        break;
-      case 9:
-        hang = "``` ┏━━━━━┯\n ┃     │\n ┃    \\O/\n ┃     X\n ┃    /\n━┻━```";
-        break;
-      case 10:
-        hang = "``` ┏━━━━━┯\n ┃     │\n ┃    \\O/\n ┃     X\n ┃    / \\\n━┻━```";
-        break;
-    }
-    return hang;
-  },
-  getRandomWordHangman: async function () {
-    let randomWord = await randomWordFR();
-    let regex = new RegExp(/[ÀÁÂàÄÅàáâàäåÒÓÔÕÖØòóôõöøÈÉÊËèéêëÇçÌÍÎÏìíîïÙÚÛÜùúûüÿÑñ\s]+/g)
-    while (randomWord.length < 4 || randomWord.match(regex)) {
-      randomWord = await randomWordFR();
-    }
-    return randomWord;
-  },
-  initHangman: async function (hangmanParams) {
-    hangmanParams.isLaunched = true;
-    hangmanParams.motAFaireDeviner = await module.exports.getRandomWordHangman();
-    hangmanParams.alphabet = [];
-    hangmanParams.erreurs = 0;
-    hangmanParams.tiretsLength = 0;
-    hangmanParams.arrayMotAFaireDeviner = [];
-    hangmanParams.tirets = [];
-    hangmanParams.essais = 0;
-
-    for (let letter of hangmanParams.motAFaireDeviner) {
-      if (letter !== "-") {
-        hangmanParams.tirets.push("_");
-        hangmanParams.tiretsLength++;
-      } else {
-        hangmanParams.tirets.push(letter);
-
-      }
-      hangmanParams.arrayMotAFaireDeviner.push(letter.toUpperCase());
-    }
-    if (hangmanParams.arrayMotAFaireDeviner.length === hangmanParams.motAFaireDeviner.length) {
-      let messageInitOk1 = "Le mot est choisi ! Pour demander une lettre, merci de rentrer la commande " + config.prefix + "devine LETTRE où LETTRE est à remplacer par celle que vous voulez faire deviner, et si vous avez une idée du mot complet, faites " + config.prefix + "devine MOT (et il y a " + config.defaultCommandCooldown + " secondes de délai entre 2 commandes)";
-      hangmanParams.messageTabFaireDeviner = hangmanParams.tirets.toString().replace(new RegExp(",", "g"), ' ');
-      module.exports.reloadEmbedHangman(hangmanParams)
-      return Promise.resolve(messageInitOk1)
-
-    }
-
-  },
-  reloadEmbedHangman: function (hangmanParams) {
-    hangmanParams.embedMessage = new MessageEmbed()
-      .setColor(ee.color)
-      .setFooter(ee.footertext, ee.footericon)
-      .setTitle("`> " + hangmanParams.messageTabFaireDeviner + " <`")
-      .setDescription(module.exports.displayHangman(hangmanParams.erreurs))
-      .addFields(
-        {
-          name: "Erreurs",
-          value: hangmanParams.erreurs + "/10",
-          inline: true
-        },
-        {
-          name: "Essais",
-          value: hangmanParams.essais,
-          inline: true
-        },
-        {
-          name: "Lettres",
-          value: hangmanParams.alphabet.length > 0 ? hangmanParams.alphabet.toString().toUpperCase() : "//",
-          inline: true
-        });
+  getTwitchOauthToken: async function (clientId, botSecret) {
+    let result = await axios.post('https://id.twitch.tv/oauth2/token?client_id=' + clientId + '&client_secret=' + botSecret + '&grant_type=client_credentials')
+    return result.data.access_token;
   }
 }
