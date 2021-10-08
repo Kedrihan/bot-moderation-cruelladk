@@ -20,7 +20,7 @@ module.exports = {
         );
       }
       else {
-        let token = await getTwitchOauthToken("process.env.CLIENT_ID_TWITCH", process.env.BOT_SECRET);
+        let token = await getTwitchOauthToken(process.env.CLIENT_ID_TWITCH, process.env.BOT_SECRET);
         twitch.api(
           {
             url: "https://api.twitch.tv/helix/users?login=" + args[0],
