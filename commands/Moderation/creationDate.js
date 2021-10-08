@@ -27,7 +27,7 @@ module.exports = {
             method: "GET",
             headers: {
               Accept: "application/vnd.twitchtv.v5+json",
-              "Client-ID": "process.env.CLIENT_ID_TWITCH",
+              "Client-ID": process.env.CLIENT_ID_TWITCH,
               "Authorization": "Bearer " + token
             }
           },
