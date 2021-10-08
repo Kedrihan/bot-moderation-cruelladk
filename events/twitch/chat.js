@@ -27,15 +27,17 @@ module.exports = async (client, twitch, pubsub, channel, user, message, isSelf) 
       },
       function (err, res, body) {
         if (err) console.log(err)
-        let created_at_insert = body.users[0].created_at.split("T")[0];
+        if (body.users && body.users[0]) {
+          let created_at_insert = body.users[0].created_at.split("T")[0];
 
-        if (new Date().toLocaleDateString('fr-FR') === new Date(created_at_insert).toLocaleDateString('fr-FR')) {
-          return newChattersTwitchDiscordChannel.send(new MessageEmbed()
-            .setColor(ee.color)
-            .setFooter(ee.footertext, ee.footericon)
-            .setTitle(`:octagonal_sign: Nouvel utilisateur :octagonal_sign:`)
-            .setDescription("Le compte **" + username + "** a été créé aujourd'hui (le " + new Date(created_at_insert).toLocaleDateString('fr-FR') + ") \n `<https://www.twitch.tv/popout/cruelladk/viewercard/" + username + ">`")
-          );
+          if (new Date().toLocaleDateString('fr-FR') === new Date(created_at_insert).toLocaleDateString('fr-FR')) {
+            return newChattersTwitchDiscordChannel.send(new MessageEmbed()
+              .setColor(ee.color)
+              .setFooter(ee.footertext, ee.footericon)
+              .setTitle(`:octagonal_sign: Nouvel utilisateur :octagonal_sign:`)
+              .setDescription("Le compte **" + username + "** a été créé aujourd'hui (le " + new Date(created_at_insert).toLocaleDateString('fr-FR') + ") \n <https://www.twitch.tv/popout/cruelladk/viewercard/" + username + ">")
+            );
+          }
         }
 
       }
